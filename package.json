@@ -1,0 +1,35 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "CLI db CMS assignment for bootcamp",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.2.5",
+    "save": "^2.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KJWesthoff/EmployeeTracker.git"
+  },
+  "keywords": [
+    "CLI",
+    "mySQL",
+    "inquirer"
+  ],
+  "author": "KJ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KJWesthoff/EmployeeTracker/issues"
+  },
+  "homepage": "https://github.com/KJWesthoff/EmployeeTracker#readme"
+}
