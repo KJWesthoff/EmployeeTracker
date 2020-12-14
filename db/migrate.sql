@@ -4,7 +4,7 @@ USE hr_db;
 
 CREATE TABLE departments(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30)
+    name VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE jobroles(
