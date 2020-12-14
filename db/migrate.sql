@@ -12,7 +12,7 @@ CREATE TABLE jobroles(
     title VARCHAR(30),
     salary DECIMAL(10,2),
     department_id INT,
-    FOREIGN KEY (department_id)  REFERENCES departments(id)
+    FOREIGN KEY (department_id)  REFERENCES departments(id) ON DELETE SET NULL
 );
 
 CREATE TABLE employees(  
@@ -22,6 +22,6 @@ CREATE TABLE employees(
     role_id INT,
     manager_id INT DEFAULT NULL,
     FOREIGN KEY (role_id) REFERENCES jobroles(id),
-    CONSTRAINT selfkey FOREIGN KEY (manager_id) REFERENCES employees(id)
+    CONSTRAINT selfkey FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
      
 );

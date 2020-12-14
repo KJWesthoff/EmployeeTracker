@@ -16,7 +16,10 @@ const promptStart = () => {
                         "add a department",
                         "add a role",
                         "add an employee",
-                        "update an employee role"]
+                        "update an employee",
+                        "show employees by",
+                        "delete",
+                        "-----------------"]
         }
     ]);
 };
@@ -163,14 +166,36 @@ promptAddEmployee = async () => {
 }
 
 
-promptUpdateEmployee = async () => {
-//updateEmployeeRole = (employee_no, new_role_id)
+promptUpdateEmployee = async () => {   
+    const InqRes = await inquirer.prompt([ 
+        {
+            type: 'list',
+            name: 'choice',
+            message: 'How would you like to update the emploee',
+            choices:    [
+                        "Role",
+                        "Manager"
+                        ]
+        }
+    ])
+    if(InqRes.choice === "Role"){
+       await promptUpdateEmployeeRole()
+    };
+    
+    if(InqRes.choice === "Manager"){
+        await promptUpdateEmployeeManager()
+    };
+    
+}; 
+
+promptUpdateEmployeeRole = async () => {
+    //updateEmployeeRole = (employee_no, new_role_id)
     const roles = await allRoles();
     const roleslist =  roles.map(({Id , Title}) => ({name:Title, value:Id}))
     const employees = await allEmployees();
     const employeeslist = employees.map(({Name, No}) => ({name:Name, value:No})); 
 
-    return inquirer.prompt([
+    const inqRes = await inquirer.prompt([
     {
         name: 'employeeNo',
         type: 'list',
@@ -184,12 +209,178 @@ promptUpdateEmployee = async () => {
         choices: roleslist  
     },
 
-    ]).then(inqRes => {
-        updateEmployeeRole(inqRes.employeeNo, inqRes.newRoleNo);
-    })
-
+    ])        
+    
+    updateEmployeeRole(inqRes.employeeNo, inqRes.newRoleNo);
 }
 
+
+promptUpdateEmployeeManager = async () => {
+
+    //updateEmployeeManager = (employee_no, new_namager_id)
+    const employees = await allEmployees();
+    const employeeslist = employees.map(({Name, No}) => ({name:Name, value:No})); 
+
+    const inqRes = await inquirer.prompt([
+    {
+        name: 'employeeNo',
+        type: 'list',
+        message: 'Who do you want to update?',
+        choices: employeeslist  
+    },
+    {
+        name: 'newRoleNo',
+        type: 'list',
+        message: 'Who is the new manager?',
+        choices: employeeslist  
+    },
+
+    ])
+    
+    updateEmployeeManager(inqRes.employeeNo, inqRes.newRoleNo);
+}
+//-----------------------
+// Show employees By
+
+promptShowEmployeesBy = async () => {
+    const InqRes = await inquirer.prompt([ 
+        {
+            type: 'list',
+            name: 'choice',
+            message: 'By what do you want to see employees?',
+            choices:    [
+                        "Manager",
+                        "Department"
+                        ]
+        }
+    ]);
+    if(InqRes.choice === "Manager"){
+        await promptChooseManager();
+    };
+    if(InqRes.choice === "Department"){
+        await promptChooseDepartment(); 
+    };
+};
+
+
+promptChooseManager = async () => {
+    const managers = await allEmployees();
+    const managerlist = managers.map(({Name, No}) => ({name:Name, value:No}));  
+    const res = await inquirer.prompt([
+        {
+            name: 'filterBy',
+            type: 'list',
+            message: 'Which manager?',
+            choices: managerlist  
+        },
+    ])
+        
+    const filterId = res.filterBy;
+    const emp = await employeesByManager(filterId)
+    console.table(cTable.getTable(emp))
+}
+
+promptChooseDepartment = async () => {
+    const departments = await allDepartments();
+    const departmentlist = departments.map(({Department, DeptNo}) => ({name:Department, value:DeptNo}));  
+    const res = await inquirer.prompt([
+        {
+            name: 'filterBy',
+            type: 'list',
+            message: 'Which Department?',
+            choices: departmentlist  
+        },
+    ])
+        
+    const filterId = res.filterBy;
+    const emp = await employeesByDepartment(filterId)
+    console.table(cTable.getTable(emp))
+}
+//-----------------------
+
+
+//-----------------------
+// Show employees By
+
+promptDelete = async () => {
+    const InqRes = await inquirer.prompt([ 
+        {
+            type: 'list',
+            name: 'choice',
+            message: 'By what do you want to see employees?',
+            choices:    [
+                        "Department",        
+                        "Role",
+                        "Employee"
+                        ]
+        }
+    ]);
+    if(InqRes.choice === "Department"){
+        await promptDeleteDepartment();
+    };
+    if(InqRes.choice === "Role"){
+        await promptDeleteRole(); 
+    };
+    if(InqRes.choice === "Employee"){
+        await promptDeleteEmployee(); 
+    };
+};
+
+
+promptDeleteDepartment = async () => {
+    const departments = await allDepartments();
+    const departmentlist = departments.map(({Department, DeptNo}) => ({name:Department, value:DeptNo}));  
+    const res = await inquirer.prompt([
+        {
+            name: 'filterBy',
+            type: 'list',
+            message: 'Which Department?',
+            choices: departmentlist  
+        },
+    ])
+        
+    const filterId = res.filterBy;
+    
+    const emp = await deleteDepartment(filterId)
+    
+}
+
+promptDeleteRole = async () => {
+    const roles = await allRoles();
+    const roleslist =  roles.map(({Id , Title}) => ({name:Title, value:Id}))
+    const res = await inquirer.prompt([
+        {
+            name: 'filterBy',
+            type: 'list',
+            message: 'Which Department?',
+            choices: roleslist  
+        },
+    ])
+        
+    const filterId = res.filterBy;
+    
+    const emp = await deleteRole(filterId)
+    
+}
+
+
+promptDeleteEmployee = async () => {
+    const employees = await allEmployees();
+    const employeeslist = employees.map(({Name, No}) => ({name:Name, value:No})); 
+    const res = await inquirer.prompt([
+        {
+            name: 'filterBy',
+            type: 'list',
+            message: 'Which Department?',
+            choices: employeeslist  
+        },
+    ])
+        
+    const filterId = res.filterBy;
+    
+    const emp = await deleteEmployee(filterId)
+    
+}
 
 function main() {
     promptStart().then(res =>{
@@ -235,14 +426,27 @@ function main() {
                         main();
                     });;
                     break;
-            case "update an employee role":
+            case "update an employee":
                 promptUpdateEmployee()
                 .then(res =>{
                     main();
                 });
                 break;
+            case "show employees by":
+                promptShowEmployeesBy()
+                .then(res =>{
+                    main();
+                });
+                break;
+            case "delete":
+                promptDelete()
+                .then(res =>{
+                    main();
+                });
+                break;
+    
 
-
+                
         }   
     });
 };

@@ -120,7 +120,7 @@ addEmployee = (employeeObj) =>{
 
 
 //select an employee to update and their new role
-updateEmployeeRole = (employee_no, new_role_id) =>{
+updateEmployeeRole = (employee_no, new_role_id) => {
     console.log(`employe: ${employee_no} to ${new_role_id} \n`);
     const query = connection.execute(
         `UPDATE employees SET role_id = ? WHERE id = ?`,
@@ -132,25 +132,87 @@ updateEmployeeRole = (employee_no, new_role_id) =>{
     );
 }
 
+//select an employee to update and their new role
+updateEmployeeManager = (employee_no, new_namager_id) => {
+  
+    const query = connection.execute(
+        `UPDATE employees SET manager_id = ? WHERE id = ?`,
+        [new_namager_id, employee_no], 
+        function(err,res) {
+            if(err) throw err;
+            
+        }
+    );
+}
 
-/*
-allDepartments();
-allRoles();
-allEmployees();
-addDepartment('Camelot!'); 
-allDepartments();
-addRole('Prime Minister', 50000, 1)
-allRoles();
-addEmployee( 'Carol' , 'Cleveland', 2, 3);
-allEmployees();
-updateEmployeeRole(4, 5); 
-allEmployees();
-*/
 
-//allDepartments().then(res =>{
-//    console.log((res.map(l => l.Department)))
-//});
+//showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+employeesByManager = async (item) => {
+    // Query all employees
+    try {
+    const result = await connection.execute(
+        `SELECT e.id As No, CONCAT(e.first_name ,' ' , e.last_name) AS 'Name', j.title as Title, j.salary AS Salary ,d.name as Department , CONCAT(m.first_name, ' ' , m.last_name) AS Manager
+        FROM employees AS e
+        JOIN jobroles AS j ON e.role_id = j.id
+        JOIN departments AS d ON j.department_id = d.id
+        LEFT JOIN employees m ON m.id = e.manager_id
+        WHERE m.id = ?`, [item]) 
+       return result[0];
+    } catch (err) {
+        console.log("error found \n" + err)
+    }    
+};
 
-//console.log("DONE")
+employeesByDepartment = async (item) => {
+    // Query all employees
+    try {
+    const result = await connection.execute(
+        `SELECT e.id As No, CONCAT(e.first_name ,' ' , e.last_name) AS 'Name', j.title as Title, j.salary AS Salary ,d.name as Department , CONCAT(m.first_name, ' ' , m.last_name) AS Manager
+        FROM employees AS e
+        JOIN jobroles AS j ON e.role_id = j.id
+        JOIN departments AS d ON j.department_id = d.id
+        LEFT JOIN employees m ON m.id = e.manager_id
+        WHERE d.id = ?`, [item]) 
+       return result[0];
+    } catch (err) {
+        console.log("error found \n" + err)
+    }    
+};
+
+
+deleteDepartment = async (filterId) => {
+    try {
+        const result = await connection.query(
+            `DELETE FROM departments WHERE id = ? `, [filterId]
+        );
+        
+    } catch (err) {
+        console.log("error found \n" + err)
+    }  
+}
+
+deleteRole = async (filterId) => {
+    try {
+        const result = await connection.query(
+            `DELETE FROM jobroles WHERE id = ? `, [filterId]
+        );
+        
+    } catch (err) {
+        console.log("error found \n" + err)
+    }  
+}
+
+deleteEmployee = async (filterId) => {
+    try {
+        const result = await connection.query(
+            `DELETE FROM employees WHERE id = ? `, [filterId]
+        );
+        
+    } catch (err) {
+        console.log("error found \n" + err)
+    }  
+}
+
+
 
 module.exports = allDepartments ;
