@@ -215,4 +215,20 @@ deleteEmployee = async (filterId) => {
 
 
 
-module.exports = allDepartments ;
+module.exports =    {
+                    allDepartments, 
+                    getDepartMentIdByName,
+                    allRoles,
+                    allEmployees,
+                    addDepartment,
+                    addRole,
+                    addEmployee,
+                    updateEmployeeRole,
+                    updateEmployeeManager,
+                    employeesByManager,
+                    employeesByDepartment,
+                    deleteDepartment,
+                    deleteRole,
+                    deleteEmployee
+
+                    };

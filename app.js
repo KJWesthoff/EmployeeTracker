@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const db = require('./server_promise');
+require('./server_promise');
 const cTable = require('console.table');
  
 
