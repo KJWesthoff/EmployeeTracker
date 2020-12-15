@@ -26,7 +26,7 @@
   ## Installation Instructions:
   fork it on github
   ## How To Use
-  It is a CLI app running in node. use npm run start
+  It is a CLI app running in node. Run it from root dir using node app.js
   ## How to Contribute:
   * Comment and bugfix - please
   * Checkout the github repo and please raise any issues with Employee Tracker you come across 
